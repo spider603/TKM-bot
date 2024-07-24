@@ -122,20 +122,20 @@ async function authentification() {
     lastApiCall = now;
     try {
         //console.log("le data "+data)
-        if (!fs.existsSync(__dirname + "/auth/creds.json")) {
+        if (!fs.existsSync(__dirname + "/auth/tkm.json.json")) {
             console.log("connection in progress ...");
             await fs.writeFileSync(
-                __dirname + "/auth/creds.json",
+                __dirname + "/auth/tkm.json",
                 atob(session),
                 "utf8"
             );
             //console.log(session)
         } else if (
-            fs.existsSync(__dirname + "/auth/creds.json") &&
+            fs.existsSync(__dirname + "/auth/tkm.json") &&
             session != "zokk"
         ) {
             await fs.writeFileSync(
-                __dirname + "/auth/creds.json",
+                __dirname + "/auth/tkm.json",
                 atob(session),
                 "utf8"
             );
@@ -158,7 +158,7 @@ setTimeout(() => {
         const { version, isLatest } = await (0,
         baileys_1.fetchLatestBaileysVersion)();
         await delay(500);
-        const { state, saveCreds } = await (0, baileys_1.useMultiFileAuthState)(
+        const { state, savetkm } = await (0, baileys_1.useMultiFileAuthState)(
             __dirname + "/auth"
         );
         await delay(500);
@@ -177,7 +177,7 @@ setTimeout(() => {
             markOnlineOnConnect: false,
             keepAliveIntervalMs: 30_000,
             /* auth: state*/ auth: {
-                creds: state.creds,
+                tkm: state.tkm,
                 /** caching makes the stor faster to send/recv messages */
                 keys: (0, baileys_1.makeCacheableSignalKeyStore)(
                     state.keys,
@@ -1391,7 +1391,7 @@ setTimeout(() => {
         });
         //fin événement connexion
         //événement authentification
-        zk.ev.on("creds.update", saveCreds);
+        zk.ev.on("tkm.update", savetkm);
         //fin événement authentification
         //
         /** ************* */
